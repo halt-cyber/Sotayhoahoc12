@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <title>THƯ VIỆN CHEMISTRY AI - KHỐI 12</title>
+  <style>
+    body { font-family: 'Nunito', sans-serif; background-color: #f1f5f9; }
+    
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background-color: #94a3b8; }
+    
+    .folder-content { display: none; padding-left: 1rem; }
+    .folder-content.open { display: block; animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .topic-link { cursor: pointer; transition: all 0.25s; border-left: 3px solid transparent; position: relative; overflow: hidden; }
+    .topic-link:hover { background-color: #f8fafc; border-left-color: #38bdf8; color: #0284c7; padding-left: 1.25rem; }
+    .topic-link.active { background: linear-gradient(90deg, #e0f2fe 0%, transparent 100%); border-left-color: #0ea5e9; color: #0369a1; font-weight: 800; padding-left: 1.25rem; }
+    
+    .prose table { width: 100%; border-collapse: separate; border-spacing: 0; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); margin: 2em 0; }
+    .prose th, .prose td { border-bottom: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; padding: 1em; text-align: left; background: #fff;}
+    .prose th { background-color: #f8fafc; color: #0f172a; font-weight: 800; text-transform: uppercase; font-size: 0.85em; letter-spacing: 0.05em; border-bottom: 2px solid #cbd5e1;}
+    .prose tr:last-child td { border-bottom: none; }
+    .prose tr td:last-child, .prose tr th:last-child { border-right: none; }
+    .prose tr:hover td { background-color: #f1f5f9; }
+    
+    .fade-in { animation: fadeIn 0.4s ease-out forwards; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+    .icon-wrapper { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 12px; }
+  </style>
+</head>
+<body class="h-screen flex overflow-hidden text-slate-800">
+
+  <!-- SIDEBAR -->
+  <aside class="w-[320px] lg:w-[350px] bg-white border-r border-slate-200 flex flex-col z-20 shadow-2xl relative">
+    <div class="bg-gradient-to-br from-cyan-500 via-blue-500 to-indigo-600 text-white p-6 shadow-md relative overflow-hidden">
+      <div class="absolute -right-6 -top-6 opacity-20 transform rotate-12">
+         <span class="material-symbols-outlined text-9xl">science</span>
+      </div>
+      <div class="relative z-10">
+          <div class="flex items-center gap-3 mb-2">
+            <div class="bg-white/20 p-2 rounded-xl backdrop-blur-sm"><span class="material-symbols-outlined text-3xl">auto_stories</span></div>
+            <h1 class="text-2xl font-black tracking-wide drop-shadow-md">THƯ VIỆN SỐ</h1>
+          </div>
+          <p class="text-cyan-100 text-sm font-bold tracking-wider">CHUYÊN ÁN HÓA HỌC 12</p>
+      </div>
+    </div>
+    <div class="flex-1 overflow-y-auto p-4 space-y-3 select-none" id="directory-tree"></div>
+    <div class="p-4 border-t border-slate-100 bg-slate-50 text-center">
+        <p class="text-xs text-slate-400 font-bold uppercase">Giáo viên: Lê Thị Hà</p>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="flex-1 flex flex-col bg-[#f8fafc] relative z-10">
+    <header class="bg-white/80 backdrop-blur-md border-b border-slate-200 px-8 py-5 flex items-center justify-between shadow-sm sticky top-0 z-10">
+      <div>
+        <div id="breadcrumb" class="text-xs font-black uppercase tracking-wider text-slate-400 mb-1 flex items-center gap-2">
+          <span class="material-symbols-outlined text-[16px] text-blue-500">home</span> THƯ VIỆN <span class="material-symbols-outlined text-[14px]">chevron_right</span> CHÀO MỪNG
+        </div>
+        <h2 id="content-title" class="text-3xl font-black text-slate-800 bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-cyan-600">Khám Phá Hóa Học 12</h2>
+      </div>
+      <div class="flex gap-3">
+         <button class="flex items-center gap-2 text-slate-600 hover:text-white bg-slate-100 hover:bg-blue-600 px-4 py-2 rounded-xl font-bold transition duration-300 shadow-sm"><span class="material-symbols-outlined">print</span> In bài</button>
+      </div>
+    </header>
+    
+    <div class="flex-1 overflow-y-auto p-6 md:p-12 relative" id="main-scroll">
+      <div id="welcome-screen" class="flex flex-col items-center justify-center h-full text-center fade-in">
+         <img src="https://cdn-icons-png.flaticon.com/512/3395/3395914.png" alt="Chemistry" class="w-48 h-48 opacity-80 mb-8 drop-shadow-xl hover:scale-105 transition transform duration-500">
+         <h3 class="text-4xl font-black text-slate-700 mb-4 tracking-tight">Hành trình chinh phục Hóa 12</h3>
+         <p class="max-w-md text-slate-500 text-lg font-medium leading-relaxed bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+            Hãy chọn một Chủ đề ở Cây thư mục bên trái để bắt đầu. Toàn bộ kiến thức đã được cô Hà hệ thống hóa theo chuẩn GDPT 2018. Chúc em học tập thật bùng nổ! 🚀
+         </p>
+      </div>
+      <article id="content-display" class="prose prose-slate lg:prose-lg max-w-4xl mx-auto hidden pb-24 prose-headings:font-black prose-headings:text-blue-800 prose-a:text-blue-600 prose-strong:text-slate-800 prose-strong:bg-yellow-100 prose-strong:px-1 prose-strong:rounded bg-white p-10 md:p-14 rounded-3xl shadow-xl border border-slate-100"></article>
+    </div>
+  </main>
+
+  <div id="database" style="display: none;">
+  
+    <!-- CD1-1 -->
+    <div id="data-cd1-1">
+      <h3 class="flex items-center gap-2 text-2xl text-cyan-700"><span class="material-symbols-outlined">science</span> 1. Khái niệm</h3>
+      <p>Xét phản ứng sau: R-COOH + R’-OH ⇌ R–COO–R’ + H2O</p>
+      <p><strong>Khái niệm:</strong> Khi thay nhóm OH ở nhóm carboxyl của carboxylic acid (RCOOH) bằng nhóm OR’ thì được ester.</p>
+      
+      <h3 class="flex items-center gap-2 text-2xl text-cyan-700 mt-8"><span class="material-symbols-outlined">hub</span> 2. Cấu tạo</h3>
+      <ul>
+        <li><strong>Ester đơn chức:</strong> R–COO–R’ với R: gốc hydrocarbon, có thể là H; R’: gốc hydrocarbon, không thể là H.</li>
+        <li><strong>Ester no, đơn chức, mạch hở:</strong> CnH2nO2 (n ≥ 2).</li>
+      </ul>
+      
+      <h3 class="flex items-center gap-2 text-2xl text-cyan-700 mt-8"><span class="material-symbols-outlined">spellcheck</span> 3. Danh pháp</h3>
+      <p class="bg-blue-50 text-blue-800 p-4 rounded-xl border border-blue-200"><strong>Tên ester = Tên gốc R’ + Tên gốc acid RCOO- (có đuôi ate)</strong></p>
+      <p>Ví dụ:</p>
+      <ul>
+        <li>HCOOCH3: Methyl formate (Methyl methanoate).</li>
+        <li>CH3COOC2H5: Ethyl acetate (Ethyl ethanoate).</li>
+        <li>CH3CH2COOCH3: Methyl propionate.</li>
+        <li>CH3COOCH=CH2: Vinyl acetate (Vinyl ethanoate).</li>
+        <li>CH2=CH-COOCH3: Methyl acrylate (methyl propenoate).</li>
+      </ul>
+      
+      <h3 class="flex items-center gap-2 text-2xl text-cyan-700 mt-8"><span class="material-symbols-outlined">diversity_3</span> 4. Đồng phân</h3>
+      <div class="flex gap-4 mb-4">
+          <div class="flex-1 bg-slate-50 p-4 rounded-xl border border-slate-200 text-center"><strong>Số đồng phân ester</strong><br><span class="text-2xl text-blue-600 font-black">2^(n-2)</span> <span class="text-sm">(n < 5)</span></div>
+          <div class="flex-1 bg-slate-50 p-4 rounded-xl border border-slate-200 text-center"><strong>Số đồng phân acid</strong><br><span class="text-2xl text-purple-600 font-black">2^(n-3)</span> <span class="text-sm">(n < 5)</span></div>
+      </div>
+      
+      <h3 class="flex items-center gap-2 text-2xl text-cyan-700 mt-8"><span class="material-symbols-outlined">water_drop</span> 5. Tính chất vật lí</h3>
+      <ul>
+        <li>Este thường là chất lỏng, nhẹ hơn nước, ít hoặc không tan trong nước do khả năng tạo liên kết hydrogen với nước rất yếu hoặc không có.
+            <br>=> Nhiệt độ sôi (M gần bằng nhau): carboxylic acid > H2O > alcohol > ester.</li>
+        <li>Các ester có mùi thơm, không độc, được dùng làm chất tạo hương trong công nghiệp thực phẩm (ethyl butyrate, benzyl acetate,...), mĩ phẩm (linalyl acetate, geranyl acetate,...).</li>
+      </ul>
+      
+      <h3 class="flex items-center gap-2 text-2xl text-cyan-700 mt-8"><span class="material-symbols-outlined">experiment</span> 6. Tính chất hóa học</h3>
+      <p>Ester bị thuỷ phân trong môi trường acid hoặc môi trường base. Sản phẩm thu được khác nhau tùy thuộc vào điều kiện phản ứng.</p>
+      <ul>
+        <li><strong>a. Phản ứng thuỷ phân ester trong môi trường acid (H+)</strong><br>Là phản ứng thuận nghịch => Acid + alcohol (thường).</li>
+        <li><strong>b. Phản ứng thuỷ phân ester trong môi trường base (phản ứng xà phòng hoá).</strong><br>Là phản ứng một chiều => Muối + alcohol.<br>
+        CH3COOC2H5 + NaOH → CH3COONa + C2H5OH (Ethyl acetate + NaOH → sodium acetate + ethyl alcohol)</li>
+      </ul>
+      
+      <h3 class="flex items-center gap-2 text-2xl text-cyan-700 mt-8"><span class="material-symbols-outlined">manufacturing</span> 7. Điều chế & 8. Ứng dụng</h3>
+      <p>Ester thường được điều chế bằng phản ứng ester hoá giữa carboxylic acid và alcohol với xúc tác là acid (thường dùng H2SO4 đặc).</p>
+      <p><strong>Vai trò H2SO4 đặc =</strong> xúc tác + hút nước (giúp phản ứng theo chiều thuận, tăng hiệu suất phản ứng).</p>
+      <ul>
+        <li>Các ester có mùi thơm, không độc, được dùng làm chất tạo hương trong công nghiệp thực phẩm, mĩ phẩm.</li>
+        <li>Một số polymer có nhóm chức ester được dùng để sản xuất chất dẻo, sơn tường.</li>
+        <li>Dùng làm dược phẩm (aspirin). Các ester có phân tử khối thấp được dùng làm dung môi để tách, chiết chất hữu cơ (ethyl acetate), pha sơn.</li>
+      </ul>
+    </div>
+    
+    <!-- CD1-2 -->
+    <div id="data-cd1-2">
+      <h3 class="text-2xl text-cyan-700 mb-4">1. Khái niệm về lipid, chất béo, acid béo</h3>
+      <ul>
+        <li><strong>Lipid</strong> là các hợp chất hữu cơ có trong tế bào sống, không tan trong nước nhưng tan trong dung môi hữu cơ không phân cực gồm: chất béo, sáp, steroid, phospholipid,...</li>
+        <li><strong>Chất béo</strong> là triester (ester ba chức) của glycerol với acid béo, gọi chung là triglyceride.</li>
+        <li><strong>Acid béo</strong> là carboxylic acid đơn chức. Hầu hết chúng có mạch carbon dài (thường từ 12 đến 24 nguyên tử carbon), không phân nhánh và có số nguyên tử carbon chẵn.</li>
+      </ul>
+      <p class="bg-yellow-50 p-4 rounded-xl border border-yellow-200"><strong>Công thức cấu tạo:</strong> (R1COO)(R2COO)(R3COO)C3H5<br>Khi R1, R2, R3 giống nhau (R): (RCOO)3C3H5 hoặc C3H5(OOCR)3.</p>
+      
+      <table>
+        <thead>
+          <tr>
+            <th>Công thức – tên (Acid béo)</th>
+            <th>Độ bão hòa</th>
+            <th>Công thức – tên (Chất béo)</th>
+            <th>Trạng thái</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>C15H31COOH: palmitic acid</td>
+            <td><span class="bg-green-100 text-green-700 px-2 py-1 rounded font-bold">No</span></td>
+            <td>(C15H31COO)3C3H5 hay C3H5(OCOC15H31)3<br>glyceryl tripalmitate hay tripalmitin</td>
+            <td>Chất béo no, rắn.</td>
+          </tr>
+          <tr>
+            <td>C17H35COOH: stearic acid</td>
+            <td><span class="bg-green-100 text-green-700 px-2 py-1 rounded font-bold">No</span></td>
+            <td>(C17H35COO)3C3H5 hay C3H5(OCOC17H35)3<br>glyceryl tristearate hay tristearin</td>
+            <td>Chất béo no, rắn.</td>
+          </tr>
+          <tr>
+            <td>C17H33COOH: oleic acid</td>
+            <td><span class="bg-red-100 text-red-700 px-2 py-1 rounded font-bold">Không no</span></td>
+            <td>(C17H33COO)3C3H5<br>glyceryl trioleate hay triolein</td>
+            <td>Chất béo không no, lỏng.</td>
+          </tr>
+          <tr>
+            <td>C17H31COOH: linoleic acid</td>
+            <td><span class="bg-red-100 text-red-700 px-2 py-1 rounded font-bold">Không no</span></td>
+            <td>(C17H31COO)3C3H5<br>glyceryl trilinoleate hay trilinolein</td>
+            <td>Chất béo không no, lỏng.</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <h3 class="text-2xl text-cyan-700 mt-8">2. Tính chất vật lí của chất béo</h3>
+      <ul>
+        <li>Khi trong phân tử chất béo chứa nhiều gốc acid béo no thì chất béo thường ở trạng thái rắn như mỡ lợn, mỡ bò, mỡ cừu,... Khi trong phân tử chất béo chứa nhiều gốc acid béo không no thì chúng thường ở trạng thái lỏng như dầu lạc, dầu vừng, dầu cá,...</li>
+        <li>Chất béo nhẹ hơn nước và không tan trong nước, dễ tan trong các dung môi hữu cơ ít phân cực hoặc không phân cực.</li>
+      </ul>
+      
+      <h3 class="text-2xl text-cyan-700 mt-8">3. Tính chất hóa học & 4. Ứng dụng</h3>
+      <ul>
+        <li><strong>a) Phản ứng thủy phân trong môi trường acid H+</strong><br>(RCOO)3C3H5 + 3H2O ⇌ 3RCOOH + C3H5(OH)3</li>
+        <li><strong>b) Phản ứng thủy phân trong môi trường base (xà phòng hóa)</strong><br>(RCOO)3C3H5 + 3NaOH → 3RCOONa + C3H5(OH)3<br><em class="text-blue-600">Thủy phân chất béo trong môi trường acid hay base thì luôn thu được glycerol.</em></li>
+        <li><strong>c) Phản ứng hydrogen hóa (cộng H2)</strong><br>(C17H33COO)3C3H5 (lỏng) + 3H2 → (C17H35COO)3C3H5 (rắn)</li>
+        <li><strong>d) Phản ứng oxi hoá bởi oxygen</strong><br>Gây hiện tượng dầu mỡ bị ôi.</li>
+      </ul>
+      <p><strong>Ứng dụng:</strong> Nguồn dự trữ năng lượng. Cung cấp acid béo thiết yếu. Vận chuyển vitamin A, D, E, K.</p>
+    </div>
+
+    <!-- UPDATE CD2: CARBOHYDRATE -->
+    <!-- CD2-1 -->
+    <div id="data-cd2-1">
+      <h3 class="text-2xl text-emerald-600 mb-4">I. KHÁI NIỆM VÀ PHÂN LOẠI CARBOHYDRATE</h3>
+      <p><strong>1. Khái niệm:</strong> Carbohydrate (saccharide) là những hợp chất hữu cơ tạp chức, thường có công thức chung là <strong>Cn(H2O)m</strong>. Phân tử chứa nhiều nhóm hydroxy (-OH) và nhóm carbonyl (aldehyde -CHO hoặc ketone -CO-).</p>
+      <p><strong>2. Phân loại Carbohydrate:</strong> Được chia làm 3 nhóm chính dựa trên phản ứng thủy phân:</p>
+      <ul>
+          <li><strong>Monosaccharide:</strong> Là nhóm carbohydrate đơn giản nhất, không bị thủy phân thành các carbohydrate nhỏ hơn. Ví dụ: Glucose, Fructose (C6H12O6).</li>
+          <li><strong>Disaccharide:</strong> Khi thủy phân hoàn toàn mỗi phân tử tạo ra 2 phân tử monosaccharide. Ví dụ: Saccharose, Maltose (C12H22O11).</li>
+          <li><strong>Polysaccharide:</strong> Khi thủy phân hoàn toàn mỗi phân tử tạo ra nhiều phân tử monosaccharide. Ví dụ: Tinh bột, Cellulose ((C6H10O5)n).</li>
+      </ul>
+
+      <h3 class="text-2xl text-emerald-600 mt-8 mb-4">II. CẤU TẠO PHÂN TỬ VÀ DẠNG TỒN TẠI CỦA GLUCOSE VÀ FRUCTOSE</h3>
+      <p><strong>1. Glucose (C6H12O6, M = 180 g/mol):</strong></p>
+      <ul>
+          <li><strong>Dạng mạch hở:</strong> Phân tử có cấu tạo của polyhydroxyaldehyde mạch thẳng, gồm 5 nhóm -OH nằm ở 5 nguyên tử carbon liên tiếp và 1 nhóm aldehyde (-CHO) ở đầu mạch (C1):<br>
+          CH2OH-CHOH-CHOH-CHOH-CHOH-CHO hoặc CH2OH[CHOH]4CHO</li>
+          <li><strong>Dạng mạch vòng:</strong> Trong dung dịch, Glucose tồn tại chủ yếu ở dạng vòng 6 cạnh (α-glucose và β-glucose). Nhóm -OH ở C1 gọi là nhóm -OH hemiacetal. Trong dung dịch luôn có sự chuyển hóa lẫn nhau giữa dạng vòng và dạng hở qua cân bằng động.</li>
+      </ul>
+      <p><strong>2. Fructose (C6H12O6, M = 180 g/mol):</strong></p>
+      <ul>
+          <li><strong>Dạng mạch hở:</strong> Fructose là đồng phân cấu tạo của Glucose. Phân tử có cấu tạo của polyhydroxyketone, gồm 5 nhóm -OH và 1 nhóm ketone (-CO-) ở vị trí C2:<br>
+          CH2OH-CHOH-CHOH-CHOH-CO-CH2OH hoặc CH2OH[CHOH]3COCH2OH</li>
+          <li><strong>Dạng mạch vòng:</strong> Trong dung dịch, Fructose tồn tại chủ yếu ở dạng vòng 5 cạnh (α-fructose và β-fructose) hoặc vòng 6 cạnh.</li>
+      </ul>
+
+      <h3 class="text-2xl text-emerald-600 mt-8 mb-4">III. TÍNH CHẤT VẬT LÍ VÀ TRẠNG THÁI TỰ NHIÊN</h3>
+      <ul>
+          <li><strong>Glucose:</strong> Chất rắn tinh thể không màu, dễ tan, vị ngọt (ngọt kém đường mía). Có nhiều trong quả chín (nho chín ➔ đường nho), mật ong (chiếm 30%). Trong máu người nồng độ ổn định khoảng 0,1%.</li>
+          <li><strong>Fructose:</strong> Chất rắn tinh thể không màu, dễ tan, vị ngọt rất sắc (ngọt nhất trong các loại đường). Có nhiều trong quả ngọt, chiếm 40% trong mật ong (tạo vị ngọt đậm).</li>
+      </ul>
+
+      <h3 class="text-2xl text-emerald-600 mt-8 mb-4">IV. TÍNH CHẤT HÓA HỌC CỦA GLUCOSE VÀ FRUCTOSE</h3>
+      <p><strong>1. Tính chất của polyalcohol (nhóm -OH kề nhau):</strong></p>
+      <ul>
+          <li><strong>Phản ứng với Cu(OH)2:</strong> Ở nhiệt độ thường, hòa tan Cu(OH)2 tạo phức chất đồng(II) glucose màu xanh lam đậm đặc trưng.<br>
+          2C6H12O6 + Cu(OH)2 → (C6H11O6)2Cu + 2H2O</li>
+          <li><strong>Phản ứng ester hóa:</strong> Tác dụng với acetic anhydride (CH3CO)2O tạo ester chứa 5 gốc acetate, chứng minh Glucose có 5 nhóm -OH.</li>
+      </ul>
+      <p><strong>2. Tính chất của nhóm aldehyde (-CHO) của Glucose:</strong></p>
+      <ul>
+          <li><strong>Phản ứng tráng bạc (thuốc thử Tollens):</strong><br>
+          CH2OH[CHOH]4CHO + 2[Ag(NH3)2]OH -(t°)→ CH2OH[CHOH]4COONH4 + 2Ag↓ + 3NH3 + H2O</li>
+          <li><strong>Phản ứng với Cu(OH)2/NaOH đun nóng:</strong> Tạo kết tủa đỏ gạch Cu2O.<br>
+          CH2OH[CHOH]4CHO + 2Cu(OH)2 + NaOH -(t°)→ CH2OH[CHOH]4COONa + Cu2O↓ (đỏ gạch) + 3H2O</li>
+          <li><strong>Phản ứng làm mất màu nước Bromine:</strong> Glucose làm mất màu nước Br2 tạo gluconic acid (<span class="text-red-600 font-bold">Fructose KHÔNG có tính chất này</span> - dùng để phân biệt).<br>
+          CH2OH[CHOH]4CHO + Br2 + H2O → CH2OH[CHOH]4COOH + 2HBr</li>
+          <li><strong>Phản ứng khử tạo Sorbitol:</strong> Cộng H2 (Ni, t°) tạo sorbitol (C6H14O6).</li>
+      </ul>
+      <p><strong>3. Sự chuyển hóa Fructose ⇌ Glucose:</strong><br>
+      Trong môi trường kiềm (OH-), Fructose chuyển hóa qua lại thành Glucose. Do đó, Fructose cũng tham gia tráng bạc và khử Cu(OH)2/NaOH đun nóng.</p>
+      <p><strong>4. Phản ứng lên men của Glucose:</strong><br>
+      C6H12O6 -(enzyme, 30-35°C)→ 2C2H5OH + 2CO2↑</p>
+
+      <h3 class="text-2xl text-emerald-600 mt-8 mb-4">V. ỨNG DỤNG VÀ ĐIỀU CHẾ GLUCOSE</h3>
+      <p><strong>Ứng dụng:</strong> Cung cấp năng lượng; làm thuốc tăng lực (dịch truyền 5%); tráng ruột phích, tráng gương, sản xuất ethyl alcohol.</p>
+      <p><strong>Điều chế:</strong> Thủy phân tinh bột (xt HCl loãng hoặc enzyme) hoặc thủy phân cellulose trong công nghiệp.</p>
+    </div>
+
+    <!-- CD2-2 -->
+    <div id="data-cd2-2">
+      <h3 class="text-2xl text-emerald-600 mb-4">I. CẤU TẠO PHÂN TỬ CỦA SACCHAROSE VÀ MALTOSE</h3>
+      <ul>
+          <li><strong>1. Saccharose (C12H22O11, M = 342 g/mol):</strong><br>
+          Gồm 1 gốc α-glucose và 1 gốc β-fructose liên kết qua nguyên tử oxygen (liên kết α-1,2-glycoside).<br>
+          Do nhóm -OH hemiacetal của glucose và -OH hemiketal của fructose đều đã tham gia liên kết, phân tử <span class="bg-red-100 text-red-700 px-1 font-bold">KHÔNG có nhóm aldehyde (-CHO) hở mạch</span> ➔ Saccharose là đường không có tính khử.</li>
+          <li><strong>2. Maltose (C12H22O11, M = 342 g/mol):</strong><br>
+          Gồm 2 gốc α-glucose liên kết qua liên kết α-1,4-glycoside.<br>
+          Gốc glucose thứ hai còn nhóm -OH hemiacetal tự do ở C1 nên trong dung dịch có thể mở vòng tạo nhóm -CHO ➔ Maltose <span class="bg-green-100 text-green-700 px-1 font-bold">CÓ tính khử</span>.</li>
+      </ul>
+
+      <h3 class="text-2xl text-emerald-600 mt-8 mb-4">II. TÍNH CHẤT VẬT LÍ VÀ TRẠNG THÁI TỰ NHIÊN</h3>
+      <ul>
+          <li><strong>Saccharose:</strong> Tinh thể không màu, vị ngọt, dễ tan. Có nhiều trong cây mía, củ cải đường, hoa thốt nốt.</li>
+          <li><strong>Maltose:</strong> Tinh thể không màu, tan tốt, vị ngọt dịu. Có trong mầm lúa mạch, mạch nha (sản phẩm thủy phân dở dang tinh bột).</li>
+      </ul>
+
+      <h3 class="text-2xl text-emerald-600 mt-8 mb-4">III. TÍNH CHẤT HÓA HỌC</h3>
+      <p><strong>1. Tính chất polyalcohol:</strong> Cả 2 đều hòa tan Cu(OH)2 ở nhiệt độ phòng tạo dung dịch phức màu xanh lam đậm.<br>
+      2C12H22O11 + Cu(OH)2 → (C12H21O11)2Cu + 2H2O</p>
+      
+      <p><strong>2. Phản ứng thủy phân (xt H+ hoặc enzyme đun nóng):</strong></p>
+      <ul>
+          <li>Saccharose: C12H22O11 + H2O → C6H12O6 (Glucose) + C6H12O6 (Fructose)</li>
+          <li>Maltose: C12H22O11 + H2O → 2 C6H12O6 (Glucose)</li>
+      </ul>
+      
+      <p><strong>3. Tính khử của Maltose (khác Saccharose):</strong> Do có nhóm -CHO khi mở vòng, Maltose có phản ứng tráng bạc, khử Cu(OH)2 đun nóng tạo kết tủa đỏ gạch Cu2O và làm mất màu nước Br2.</p>
+
+      <h3 class="text-2xl text-emerald-600 mt-8 mb-4">IV. ỨNG DỤNG VÀ SẢN XUẤT SACCHAROSE</h3>
+      <p><strong>Ứng dụng:</strong> Thực phẩm (bánh kẹo, nước giải khát); y học; thủy phân tráng ruột phích.</p>
+      <p><strong>Sản xuất đường mía:</strong> Ép nước mía ➔ Khử tạp chất bằng vôi sữa Ca(OH)2 và CO2 ➔ Tẩy màu bằng SO2 ➔ Cô đặc ➔ Kết tinh thu đường kính và mật rỉ.</p>
+    </div>
+
+    <!-- CD2-3 -->
+    <div id="data-cd2-3">
+      <h3 class="text-2xl text-emerald-600 mb-4">I. CẤU TẠO PHÂN TỬ CỦA TINH BỘT VÀ CELLULOSE</h3>
+      <ul>
+          <li><strong>1. Tinh bột (C6H10O5)n:</strong> Hỗn hợp 2 dạng polymer:
+              <br>• <strong>Amylose (20-30%):</strong> Gốc α-glucose liên kết α-1,4-glycoside tạo chuỗi xoắn dài không nhánh.
+              <br>• <strong>Amylopectin (70-80%):</strong> Liên kết α-1,4 và α-1,6-glycoside tạo cấu trúc <strong>phân nhánh</strong>.
+          </li>
+          <li><strong>2. Cellulose (C6H10O5)n:</strong> Chuỗi mạch thẳng <strong>không phân nhánh</strong>, gồm các gốc β-glucose (liên kết β-1,4-glycoside). Mỗi mắt xích có 3 nhóm -OH tự do: [C6H7O2(OH)3]n.</li>
+      </ul>
+
+      <h3 class="text-2xl text-emerald-600 mt-8 mb-4">II. TÍNH CHẤT VẬT LÍ</h3>
+      <ul>
+          <li><strong>Tinh bột:</strong> Rắn vô định hình, trắng, không tan nước lạnh. Trong nước nóng (>65°C) trương nở tạo hồ tinh bột (keo nhớt). Có trong ngũ cốc, củ khoai, sắn.</li>
+          <li><strong>Cellulose:</strong> Dạng sợi, trắng, không tan nước. Tan trong <strong>nước Schweizer</strong> (Cu(OH)2 trong NH3 đặc). Thành phần chính của màng tế bào thực vật (bông nõn chứa 98%).</li>
+      </ul>
+
+      <h3 class="text-2xl text-emerald-600 mt-8 mb-4">III. TÍNH CHẤT HÓA HỌC</h3>
+      <ul>
+          <li><strong>1. Thủy phân:</strong> (xt H+ hoặc enzyme). Tinh bột (amylase) và Cellulose (cellulase) đều thủy phân hoàn toàn tạo ra n Glucose.</li>
+          <li><strong>2. Phản ứng Tinh bột với Iodine (I2):</strong> Nhỏ I2 vào hồ tinh bột tạo <strong>màu xanh tím đặc trưng</strong> (nhận biết tinh bột). Đun nóng mất màu, để nguội xuất hiện lại.</li>
+          <li><strong>3. Phản ứng Cellulose với HNO3 đặc:</strong> <br>
+          [C6H7O2(OH)3]n + 3nHNO3 -(H2SO4 đặc, t°)→ [C6H7O2(ONO2)3]n + 3nH2O<br>
+          Sản phẩm là <strong>Cellulose trinitrate</strong> dùng làm thuốc súng không khói.</li>
+          <li><strong>4. Phản ứng tạo tơ:</strong> Cellulose tác dụng (CH3CO)2O tạo cellulose triacetate (sản xuất tơ acetate). Hòa tan trong nước Schweizer dùng để sản xuất tơ visco.</li>
+      </ul>
+
+      <h3 class="text-2xl text-emerald-600 mt-8 mb-4">IV. BẢNG TỔNG HỢP SO SÁNH CÁC CARBOHYDRATE TRỌNG TÂM</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Tên</th>
+            <th>Công thức</th>
+            <th>Phân loại</th>
+            <th>Phản ứng đặc trưng</th>
+            <th>Ứng dụng nổi bật</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Glucose</strong></td>
+            <td>C6H12O6</td>
+            <td>Monosaccharide (Aldohexose)</td>
+            <td>Tráng bạc Ag, Cu(OH)2 đun nóng đỏ gạch, mất màu Br2, lên men rượu</td>
+            <td>Thuốc tăng lực, truyền dịch 5%, tráng ruột phích</td>
+          </tr>
+          <tr>
+            <td><strong>Fructose</strong></td>
+            <td>C6H12O6</td>
+            <td>Monosaccharide (Ketohexose)</td>
+            <td>Cu(OH)2 lạnh xanh lam, Tráng bạc Ag (trong OH-), KHÔNG mất màu Br2</td>
+            <td>Vị ngọt tự nhiên trong mật ong và bánh kẹo</td>
+          </tr>
+          <tr>
+            <td><strong>Saccharose</strong></td>
+            <td>C12H22O11</td>
+            <td>Disaccharide (α-Glu + β-Fru)</td>
+            <td>Hòa tan Cu(OH)2 lạnh xanh lam, Thủy phân tạo Glu + Fruc (KHÔNG tráng bạc)</td>
+            <td>Đường ăn gia đình, bánh kẹo, đồ uống</td>
+          </tr>
+          <tr>
+            <td><strong>Tinh bột</strong></td>
+            <td>(C6H10O5)n</td>
+            <td>Polysaccharide</td>
+            <td>Tác dụng với I2 tạo màu xanh tím, Thủy phân tạo Glucose</td>
+            <td>Lương thực, lên men ethanol E5, hồ dán</td>
+          </tr>
+          <tr>
+            <td><strong>Cellulose</strong></td>
+            <td>(C6H10O5)n</td>
+            <td>Polysaccharide ([C6H7O2(OH)3]n)</td>
+            <td>Tác dụng HNO3 đặc tạo thuốc súng không khói, tan trong nước Schweizer</td>
+            <td>Gỗ, giấy, sợi dệt, tơ nhân tạo (visco, acetate)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- CĐ3-1 -->
+    <div id="data-cd3-1">
+      <h3 class="text-2xl text-pink-600 mb-4">I. KHÁI NIỆM, PHÂN LOẠI, ĐỒNG PHÂN, DANH PHÁP</h3>
+      <ul>
+        <li><strong>1. Khái niệm:</strong> Khi thay thế nguyên tử H trong phân tử NH3 bằng gốc hydrocarbon ta thu được amine.</li>
+        <li><strong>2. Phân loại:</strong> 
+          <br>• <em>Bậc amine:</em> Bằng số gốc hydrocarbon gắn với nguyên tử N (amine bậc I, bậc II, bậc III).
+          <br>• <em>Theo gốc hydrocarbon:</em> Alkylamine (CH3NH2, C2H5NH2), Arylamine (C6H5NH2).
+        </li>
+        <li><strong>3. Đồng phân:</strong> Công thức tính nhanh amine no, đơn chức, mạch hở CnH2n+3N: N = 2^(n-1) (với 1 < n < 5).</li>
+        <li><strong>4. Danh pháp:</strong> 
+          <br>• Tên gốc – chức = Tên gốc hydrocarbon + amine.
+          <br>• Tên thay thế = Tên hydrocarbon (bỏ e) + vị trí + amine.
+        </li>
+      </ul>
+      
+      <h4>Bảng danh pháp một số amine phổ biến:</h4>
+      <table>
+        <thead>
+          <tr><th>Công thức cấu tạo</th><th>Tên gốc – chức</th><th>Tên thay thế</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>CH3NH2</td><td>Methylamine</td><td>Methanamine</td></tr>
+          <tr><td>C2H5NH2</td><td>Ethylamine</td><td>Ethanamine</td></tr>
+          <tr><td>CH3NHCH3</td><td>Dimethylamine</td><td>N-methylmethanamine</td></tr>
+          <tr><td>(CH3)3N</td><td>Trimethylamine</td><td>N,N-dimethylmethanamine</td></tr>
+          <tr><td>(CH3)2CHNH2</td><td>Isopropylamine</td><td>Propan-2-amine</td></tr>
+          <tr><td>C6H5NH2</td><td>Aniline</td><td>Benzenamine</td></tr>
+        </tbody>
+      </table>
+
+      <h3 class="text-2xl text-pink-600 mt-8 mb-4">II. TÍNH CHẤT HÓA HỌC & ĐIỀU CHẾ</h3>
+      <ul>
+        <li><strong>1. Tính base:</strong> Amine có tính base yếu tương tự NH3 do nguyên tử N còn cặp electron chưa liên kết.<br>
+          • Đổi màu quỳ tím: Dung dịch alkylamine làm quỳ tím hóa xanh. Aniline tính base cực yếu không đổi màu quỳ.<br>
+          • Tác dụng với acid: CH3NH2 + HCl → [CH3NH3]+Cl- (Methylammonium chloride).<br>
+          • Phản ứng tạo phức: Methylamine tác dụng với Cu(OH)2 tạo dung dịch phức màu xanh lam đậm.
+        </li>
+        <li><strong>2. Phản ứng với HNO2:</strong> Alkylamine bậc 1 tạo alcohol + N2↑. Aniline (0-5°C) tạo muối diazonium.</li>
+        <li><strong>3. Phản ứng thế nhân thơm (Aniline):</strong> Aniline phản ứng với nước bromine ở đk thường xuất hiện <span class="bg-yellow-100 px-1 font-bold">kết tủa trắng</span> (2,4,6-tribromoaniline). <em>Dùng nhận biết aniline.</em></li>
+      </ul>
+      <p><strong>Điều chế:</strong> Khử hợp chất nitro: C6H5NO2 + 6[H] (Fe + HCl, t°) → C6H5NH2 + 2H2O</p>
+    </div>
+
+    <!-- CĐ3-2 -->
+    <div id="data-cd3-2">
+      <h3 class="text-2xl text-pink-600 mb-4">I. KHÁI NIỆM & DANH PHÁP</h3>
+      <p><strong>Khái niệm:</strong> Amino acid là hợp chất hữu cơ tạp chức, chứa đồng thời nhóm amino (-NH2) và nhóm carboxyl (-COOH). Các amino acid thiên nhiên hầu hết là α-amino acid.</p>
+      
+      <h4>Bảng 5 α-amino acid thông dụng:</h4>
+      <table>
+        <thead>
+          <tr><th>Công thức cấu tạo</th><th>Tên thay thế</th><th>Tên thông thường (Kí hiệu)</th><th>M</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>H2N-CH2-COOH</td><td>Aminoethanoic acid</td><td>Glycine (Gly)</td><td>75</td></tr>
+          <tr><td>H2N-CH(CH3)-COOH</td><td>2-aminopropanoic acid</td><td>Alanine (Ala)</td><td>89</td></tr>
+          <tr><td>(CH3)2CH-CH(NH2)-COOH</td><td>2-amino-3-methylbutanoic acid</td><td>Valine (Val)</td><td>117</td></tr>
+          <tr><td>HOOC-[CH2]2-CH(NH2)-COOH</td><td>2-aminopentane-1,5-dioic acid</td><td>Glutamic acid (Glu)</td><td>147</td></tr>
+          <tr><td>H2N-[CH2]4-CH(NH2)-COOH</td><td>2,6-diaminohexanoic acid</td><td>Lysine (Lys)</td><td>148</td></tr>
+        </tbody>
+      </table>
+
+      <h3 class="text-2xl text-pink-600 mt-8 mb-4">II. TÍNH CHẤT HÓA HỌC</h3>
+      <ul>
+        <li><strong>Đặc điểm cấu tạo:</strong> Tồn tại chủ yếu ở dạng <strong>ion lưỡng cực</strong> (H3N+-R-COO-). Tinh thể không màu, nóng chảy cao, dễ tan.</li>
+        <li><strong>Tính lưỡng tính:</strong> Tác dụng với cả HCl và NaOH.</li>
+        <li><strong>Màu chất chỉ thị:</strong> 
+            <br>• Gly, Ala, Val (pH ≈ 7): Quỳ không đổi màu.
+            <br>• Glutamic acid (nhiều COOH hơn): Quỳ hóa đỏ.
+            <br>• Lysine (nhiều NH2 hơn): Quỳ hóa xanh.
+        </li>
+        <li><strong>Tính chất điện di:</strong> Trong môi trường acid mạnh (cation) di chuyển về cực âm (-). Trong môi trường base mạnh (anion) di chuyển về cực dương (+).</li>
+        <li><strong>Phản ứng trùng ngưng:</strong> Khi đun nóng, nhóm -COOH tách -OH kết hợp với H của nhóm -NH2 phân tử khác tạo polymer (polyamide) và H2O.</li>
+      </ul>
+    </div>
+
+    <!-- CĐ3-3, CĐ3-4... -->
+    <!-- Mình đã gộp Peptide, Protein, Enzyme -->
+    <div id="data-cd3-3">
+      <h3 class="text-2xl text-pink-600 mb-4">I. PEPTIDE</h3>
+      <p><strong>Khái niệm:</strong> Peptide cấu tạo từ các đơn vị α-amino acid liên kết qua <strong>liên kết peptide (-CO-NH-)</strong>. 
+      <br>Mạch peptide bắt đầu bằng đầu N (trái) và kết thúc bằng đầu C (phải). Số liên kết peptide mạch hở = Số gốc - 1.</p>
+      
+      <ul>
+        <li><strong>Phản ứng thủy phân:</strong> Bị thủy phân hoàn toàn bởi acid, base, enzyme tạo các α-amino acid.</li>
+        <li><strong>Phản ứng màu biuret:</strong> Peptide tác dụng với Cu(OH)2/NaOH xuất hiện phức màu tím. <span class="text-red-500 font-bold">Điều kiện: Từ tripeptide trở lên (Dipeptide KHÔNG phản ứng).</span></li>
+      </ul>
+
+      <h3 class="text-2xl text-pink-600 mt-8 mb-4">II. PROTEIN & ENZYME</h3>
+      <ul>
+        <li><strong>Protein:</strong> Là polypeptide cao phân tử (>50 gốc). Dạng sợi (tóc, móng, tơ) không tan. Dạng cầu (lòng trắng trứng, hemoglobin) tan tạo dung dịch keo.</li>
+        <li><strong>Sự đông tụ:</strong> Dưới tác dụng của nhiệt, acid, base, cồn, protein bị đông tụ (VD: luộc trứng, riêu cua).</li>
+        <li><strong>Enzyme:</strong> Chất xúc tác sinh học (bản chất protein). Tốc độ cực lớn, tính chọn lọc (đặc hiệu) cực cao.</li>
+      </ul>
+    </div>
+
+    <!-- CĐ4 -->
+    <div id="data-cd4-1">
+      <h3 class="text-2xl text-amber-600 mb-4">I. PHÂN LOẠI POLYMER & TÍNH CHẤT</h3>
+      <ul>
+        <li><strong>Theo nguồn gốc:</strong> 
+          <br>• Thiên nhiên: Tinh bột, cellulose, cao su thiên nhiên.
+          <br>• Tổng hợp: PE, PVC, Nylon-6,6.
+          <br>• Bán tổng hợp (Nhân tạo): Tơ visco, tơ cellulose acetate.
+        </li>
+        <li><strong>Theo cấu trúc mạch:</strong> Không nhánh (PE, PVC, Cellulose). Phân nhánh (Amylopectin). Mạng lưới không gian (Cao su lưu hóa, nhựa bakelite).</li>
+      </ul>
+
+      <h3 class="text-2xl text-amber-600 mt-8 mb-4">II. SO SÁNH TRÙNG HỢP VÀ TRÙNG NGƯNG</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Tiêu chí</th>
+            <th>Phản ứng Trùng hợp</th>
+            <th>Phản ứng Trùng ngưng</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Đặc điểm</td>
+            <td>Không giải phóng chất phụ</td>
+            <td>Giải phóng phân tử nhỏ (H2O)</td>
+          </tr>
+          <tr>
+            <td>Điều kiện</td>
+            <td>Có liên kết đôi C=C hoặc vòng kém bền</td>
+            <td>Có ≥ 2 nhóm chức có khả năng phản ứng</td>
+          </tr>
+          <tr>
+            <td>Ví dụ</td>
+            <td>PE, PVC, PS, Cao su Buna, Tơ Nitron</td>
+            <td>Nylon-6,6, Tơ Lapsan, Tơ Capron, Nhựa PPF</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- CĐ5 -->
+    <div id="data-cd5-1">
+      <h3 class="text-2xl text-yellow-600 mb-4">I. PIN ĐIỆN HÓA & SUẤT ĐIỆN ĐỘNG</h3>
+      <p><strong>Thế điện cực chuẩn E°:</strong> E° càng âm ➔ Tính khử càng mạnh. E° càng dương ➔ Tính oxi hóa càng mạnh.</p>
+      <p><strong>Quy tắc Alpha (α):</strong> Chất oxi hóa mạnh hơn + Chất khử mạnh hơn → Chất oxi hóa yếu hơn + Chất khử yếu hơn.</p>
+      
+      <div class="bg-yellow-50 p-6 rounded-2xl border border-yellow-200 my-6">
+          <h4 class="text-lg font-bold text-yellow-800 mb-2">Cấu tạo Pin Galvani</h4>
+          <ul class="mb-0">
+             <li><strong>Anode (Cực Âm -):</strong> Xảy ra <strong>Oxi hóa</strong> (KL mạnh nhường e, thanh KL mòn).</li>
+             <li><strong>Cathode (Cực Dương +):</strong> Xảy ra <strong>Khử</strong> (Ion KL yếu nhận e, bám vào thanh).</li>
+             <li>E°pin = E°(cathode) - E°(anode) > 0</li>
+          </ul>
+      </div>
+    </div>
+    
+    <div id="data-cd5-2">
+      <h3 class="text-2xl text-yellow-600 mb-4">I. ĐIỆN PHÂN & ĐỊNH LUẬT FARADAY</h3>
+      <p><strong>Cấu tạo cực (Ngược Pin):</strong> Cathode là Cực Âm (-) xảy ra sự Khử. Anode là Cực Dương (+) xảy ra sự Oxi hóa.</p>
+      
+      <h4>Thứ tự điện phân dung dịch:</h4>
+      <ul>
+        <li><strong>Tại Cathode (-):</strong> KL mạnh (K+, Na+, Ca2+, Ba2+, Mg2+, Al3+) KHÔNG bị khử. Nước bị khử: 2H2O + 2e- → H2↑ + 2OH-.</li>
+        <li><strong>Tại Anode (+):</strong> Gốc acid chứa O (SO4 2-, NO3 -) KHÔNG bị oxi hóa. Nước bị oxi hóa: 2H2O → O2↑ + 4H+ + 4e-.</li>
+      </ul>
+      
+      <p class="font-bold text-lg text-center bg-white p-4 rounded-xl shadow-sm my-6 text-blue-800">
+         Định luật Faraday: m = (A.I.t) / (n.F)
+      </p>
+    </div>
+
+    <!-- CĐ6 -->
+    <div id="data-cd6-1">
+      <h3 class="text-2xl text-slate-600 mb-4">I. KIM LOẠI & DÃY ĐIỆN HÓA</h3>
+      <p>Đặc tính vật lí chung (Dẻo, Dẫn điện, Dẫn nhiệt, Ánh kim) do <strong>electron tự do</strong> gây ra.</p>
+      <ul>
+        <li>Nhẹ nhất: Li | Nặng nhất: Os</li>
+        <li>Nóng chảy thấp nhất: Hg (-39°C) | Nóng chảy cao nhất: W (3410°C)</li>
+        <li>Dẫn điện tốt nhất: Ag > Cu > Au > Al > Fe. Cứng nhất: Cr.</li>
+      </ul>
+
+      <p class="mt-6"><strong>Tính chất hóa học:</strong> Đặc trưng là <strong>TÍNH KHỬ</strong> (M → Mn+ + ne-).</p>
+      <p><strong>Ăn mòn điện hóa:</strong> Cần 3 điều kiện (2 điện cực khác chất, tiếp xúc nhau, nhúng trong dd điện li). Có phát sinh dòng điện, Kim loại mạnh hơn (Anode) bị ăn mòn.</p>
+    </div>
+
+    <!-- CĐ7 -->
+    <div id="data-cd7-1">
+      <h3 class="text-2xl text-teal-600 mb-4">I. NHÓM IA, IIA & NƯỚC CỨNG</h3>
+      <p><strong>Kim loại Kiềm (IA), Kiềm thổ (IIA):</strong> Tính khử cực mạnh. Phản ứng mãnh liệt với nước tạo dung dịch kiềm + H2 (Bảo quản: Ngâm trong dầu hỏa).</p>
+      
+      <h4 class="mt-6 text-lg font-bold">Làm mềm Nước cứng (chứa Ca2+, Mg2+)</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>Loại nước cứng</th>
+            <th>Phương pháp làm mềm</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Tạm thời (chứa HCO3-)</td>
+            <td>Đun sôi, dùng Ca(OH)2 vừa đủ, Na2CO3, Na3PO4</td>
+          </tr>
+          <tr>
+            <td>Vĩnh cửu (Cl-, SO4 2-) & Toàn phần</td>
+            <td>Không đun sôi được. Dùng Na2CO3, Na3PO4</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- CĐ8 -->
+    <div id="data-cd8-1">
+      <h3 class="text-2xl text-indigo-600 mb-4">I. KIM LOẠI CHUYỂN TIẾP & PHỨC CHẤT</h3>
+      <div class="bg-indigo-50 border-l-4 border-indigo-500 p-4 mb-4">Lưu ý: Mảng kiến thức mới GDPT 2018.</div>
+      <p><strong>Cấu hình ngoại lệ:</strong> Cr [Ar]3d5 4s1 và Cu [Ar]3d10 4s1. Cation dễ nhận cặp electron tạo Phức chất.</p>
+      
+      <p class="mt-6"><strong>Phức chất:</strong> Gồm Nguyên tử trung tâm (Cation KL chuyển tiếp) liên kết phối trí (cho-nhận) với Phối tử (NH3, H2O, Cl-, CN-).</p>
+      <ul>
+        <li><strong>Đồng phân Hình học (Cis - Trans):</strong> cis-[PtCl2(NH3)2] (Cisplatin) đặc trị ung thư. Dạng trans không có tác dụng.</li>
+        <li><strong>Ứng dụng:</strong> Hemoglobin (phức Fe), Chlorophyll (phức Mg), Thuốc thử Tollens [Ag(NH3)2]+.</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    const structure = [
+      { id: "cd1", title: "CĐ1: ESTER - LIPID", icon: "science", color: "text-cyan-500", bg: "bg-cyan-50", topics: [{ id: "cd1-1", title: "Chủ đề 1: Ester" }, { id: "cd1-2", title: "Chủ đề 2: Lipid" }] },
+      { id: "cd2", title: "CĐ2: CARBOHYDRATE", icon: "eco", color: "text-emerald-500", bg: "bg-emerald-50", topics: [{ id: "cd2-1", title: "Chủ đề 1: Monosaccharide" }, { id: "cd2-2", title: "Chủ đề 2: Disaccharide" }, { id: "cd2-3", title: "Chủ đề 3: Polysaccharide" }] },
+      { id: "cd3", title: "CĐ3: HỢP CHẤT NITROGEN", icon: "biotech", color: "text-pink-500", bg: "bg-pink-50", topics: [{ id: "cd3-1", title: "Chủ đề 1: Amine" }, { id: "cd3-2", title: "Chủ đề 2: Amino acid" }, { id: "cd3-3", title: "Chủ đề 3: Peptide & Protein" }] },
+      { id: "cd4", title: "CĐ4: POLYMER", icon: "view_in_ar", color: "text-amber-500", bg: "bg-amber-50", topics: [{ id: "cd4-1", title: "Chủ đề 1: Đại cương Polymer" }, { id: "cd4-2", title: "Chủ đề 2: Vật liệu Polymer" }] },
+      { id: "cd5", title: "CĐ5: PIN & ĐIỆN PHÂN", icon: "electric_bolt", color: "text-yellow-500", bg: "bg-yellow-50", topics: [{ id: "cd5-1", title: "Chủ đề 1: Thế điện cực & Pin" }, { id: "cd5-2", title: "Chủ đề 2: Điện phân" }] },
+      { id: "cd6", title: "CĐ6: ĐẠI CƯƠNG KIM LOẠI", icon: "diamond", color: "text-slate-500", bg: "bg-slate-100", topics: [{ id: "cd6-1", title: "Chủ đề 1: Lý tính & Hóa tính" }] },
+      { id: "cd7", title: "CĐ7: NHÓM IA, IIA", icon: "water_drop", color: "text-teal-500", bg: "bg-teal-50", topics: [{ id: "cd7-1", title: "Chủ đề 1: Kiềm, Kiềm thổ, Nước cứng" }] },
+      { id: "cd8", title: "CĐ8: PHỨC CHẤT", icon: "hexagon", color: "text-indigo-500", bg: "bg-indigo-50", topics: [{ id: "cd8-1", title: "Chủ đề 1: KL Chuyển tiếp & Phức chất" }] }
+    ];
+
+    const treeContainer = document.getElementById("directory-tree");
+    
+    structure.forEach((chuyenDe, index) => {
+      const folderDiv = document.createElement("div");
+      folderDiv.className = "mb-3 bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-sm transition hover:shadow-md";
+      
+      const isFirst = index === 0;
+      
+      const headerDiv = document.createElement("div");
+      headerDiv.className = `flex items-center justify-between p-3 cursor-pointer transition ${isFirst ? chuyenDe.bg : 'hover:bg-slate-50'}`;
+      headerDiv.innerHTML = `
+        <div class="flex items-center gap-3">
+           <div class="icon-wrapper ${chuyenDe.bg} ${chuyenDe.color}">
+             <span class="material-symbols-outlined text-[20px] folder-icon">${chuyenDe.icon}</span>
+           </div>
+           <span class="font-bold text-sm text-slate-700">${chuyenDe.title}</span>
+        </div>
+        <span class="material-symbols-outlined text-slate-400 chevron-icon transition-transform duration-300 ${isFirst ? 'rotate-180' : ''}">expand_more</span>
+      `;
+      
+      const contentDiv = document.createElement("div");
+      contentDiv.className = `folder-content ${isFirst ? 'open' : ''} bg-white pb-3 pt-1 border-t border-slate-50`;
+      
+      chuyenDe.topics.forEach(chuDe => {
+         const topicDiv = document.createElement("div");
+         topicDiv.className = "topic-link text-sm py-2 px-4 text-slate-600 flex items-center gap-2 mt-1 rounded-r-xl mr-2 font-semibold";
+         topicDiv.innerHTML = `<span class="material-symbols-outlined text-[18px] opacity-40">edit_document</span> ${chuDe.title}`;
+         
+         topicDiv.onclick = (e) => {
+            e.stopPropagation();
+            document.querySelectorAll('.topic-link').forEach(el => el.classList.remove('active'));
+            topicDiv.classList.add('active');
+            loadContent(chuDe.id, chuyenDe.title, chuDe.title);
+         };
+         
+         contentDiv.appendChild(topicDiv);
+      });
+      
+      headerDiv.onclick = () => {
+         const isOpen = contentDiv.classList.contains('open');
+         
+         document.querySelectorAll('.folder-content').forEach(el => el.classList.remove('open'));
+         document.querySelectorAll('.chevron-icon').forEach(el => el.classList.remove('rotate-180'));
+         document.querySelectorAll('.icon-wrapper').forEach(el => el.parentElement.parentElement.classList.remove(chuyenDe.bg));
+         
+         if(!isOpen) {
+            contentDiv.classList.add('open');
+            headerDiv.classList.add(chuyenDe.bg);
+            headerDiv.querySelector('.chevron-icon').classList.add('rotate-180');
+         }
+      };
+      
+      folderDiv.appendChild(headerDiv);
+      folderDiv.appendChild(contentDiv);
+      treeContainer.appendChild(folderDiv);
+    });
+
+    function loadContent(topicId, chuyenDeTitle, chuDeTitle) {
+      const displayArea = document.getElementById("content-display");
+      const welcomeScreen = document.getElementById("welcome-screen");
+      const dataSource = document.getElementById("data-" + topicId);
+      
+      document.getElementById("breadcrumb").innerHTML = `<span class="material-symbols-outlined text-[16px] text-blue-500">home</span> THƯ VIỆN <span class="material-symbols-outlined text-[14px]">chevron_right</span> ${chuyenDeTitle}`;
+      document.getElementById("content-title").innerText = chuDeTitle;
+      
+      welcomeScreen.style.display = "none";
+      displayArea.style.display = "block";
+      
+      if(dataSource) {
+          displayArea.classList.remove("fade-in");
+          void displayArea.offsetWidth; 
+          
+          displayArea.innerHTML = dataSource.innerHTML;
+          displayArea.classList.add("fade-in");
+          
+          document.getElementById('main-scroll').scrollTop = 0;
+      } else {
+          displayArea.innerHTML = `<div class="p-8 text-center text-red-500 font-bold border-2 border-dashed border-red-300 rounded-2xl bg-red-50 flex flex-col items-center justify-center gap-4"><span class="material-symbols-outlined text-5xl">construction</span> Đang cập nhật nội dung cho ${chuDeTitle}...</div>`;
+      }
+    }
+  </script>
+</body>
+</html>
